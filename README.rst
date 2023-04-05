@@ -1,4 +1,4 @@
-#Protein Tools
+Protein Tools
 =======================================
 Developed by Christian de Frondeville
 ![Logo](https://github.com/ChatterjeeAyan/AI-Bind/blob/main/Images/NetSci_Logo.png)
@@ -9,7 +9,6 @@ Start by creating a protein class with the desired ChEMBL, PDB, Uniprot, or HGNC
 
 ```
 import proteinTools
-
 protein = Protein('1H4K')
 print(protein.Uniprot)
 print(protein.residues('A44')
