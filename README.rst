@@ -11,6 +11,10 @@ Developed by Christian de Frondeville and sponsored by the Barabasi Network Scie
 
 ProteinTools is a lightweight, flexible, and robust package that simplifies interactions with proteins. Allows for easily obtaining protein identifiers, downloading protein structural files, identifying and processing residues/residue atoms, identifying protein/ligand interactions, and much more.
 
+ProteinTools can be installed via the following command: ::
+
+        pip install proteinTools
+        
 Start by creating a protein class with the desired ChEMBL, PDB, Uniprot, or HGNC/Genecard identifier (including species if not human), and use the .download method (with an optional destination directory argument) to download the PDB structural file or Alphafold representation, which generates the residues, chains, atoms, and ligands if applicable, all with their own attributes and easily accessible from the protein class.::
 
         import proteinTools
