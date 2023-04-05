@@ -24,4 +24,6 @@ The protein file can than be downloaded to a directory (default the user's curre
 
    myprot = proteinTools.Protein('2D3Z', 'e coli')
    myprot.download('/path/to/directory')
+   
+.. autofunction:: to_csv
 
