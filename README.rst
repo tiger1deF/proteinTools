@@ -1,6 +1,7 @@
 Protein Tools
 =======================================
 Developed by Christian de Frondeville
+
 ![Logo](https://github.com/ChatterjeeAyan/AI-Bind/blob/main/Images/NetSci_Logo.png)
 
 ProteinTools is a lightweight, flexible, and robust package that simplifies interactions with proteins. Allows for easily obtaining protein identifiers, downloading protein structural files, identifying and processing residues/residue atoms, identifying protein/ligand interactions, and much more.
