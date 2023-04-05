@@ -2,9 +2,9 @@
 
 # -- Project information
 
-project = 'Lumache'
-copyright = '2021, Graziella'
-author = 'Graziella'
+project = 'proteinTools'
+copyright = '2023, Christian de Frondeville'
+author = 'Christian de Frondeville'
 
 release = '0.1'
 version = '0.1.0'
