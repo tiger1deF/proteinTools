@@ -1,0 +1,14 @@
+[project]
+name = "proteinTools"
+version = "0.0.1"
+dependencies = [
+    "requests",
+    "importlib-metadata",
+    "pandas",
+    "xml",
+    "csv",
+    "mygene",
+    "functools",
+    "urllib",
+    "chembl-webresource-client"
+]

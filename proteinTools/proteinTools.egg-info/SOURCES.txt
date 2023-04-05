@@ -1,0 +1,12 @@
+LICENSE
+README.rst
+pyproject.toml
+proteinTools/__init__.py
+proteinTools/import_modules.py
+proteinTools/proteinTools.py
+proteinTools/tiger_utils.py
+proteinTools.egg-info/PKG-INFO
+proteinTools.egg-info/SOURCES.txt
+proteinTools.egg-info/dependency_links.txt
+proteinTools.egg-info/requires.txt
+proteinTools.egg-info/top_level.txt
