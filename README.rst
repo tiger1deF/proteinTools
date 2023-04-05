@@ -1,6 +1,6 @@
 Protein Tools
 =======================================
-Developed by Christian de Frondeville
+Developed by Christian de Frondeville and sponsored by the Barabasi Network Science Laboratories
 
 .. image:: https://github.com/ChatterjeeAyan/AI-Bind/blob/main/Images/NetSci_Logo.png
    :width: 200px
