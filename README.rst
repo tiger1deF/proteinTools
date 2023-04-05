@@ -19,6 +19,7 @@ Start by creating a protein class with the desired ChEMBL, PDB, Uniprot, or HGNC
         print(protein.Uniprot)
         print(protein.residues('A44')
         print(protein[1:3])
+        print(protein.atoms(1000))
        
 Output: ::
 
@@ -28,6 +29,13 @@ Output: ::
         Index                                                        44
         Atoms         [<__main__.atom object at 0x2b937fb49eb0>, <__...
         [<__main__.residue object at 0x2b937f95e220>, <__main__.residue object at 0x2b937f95ee80>]
+        Element                                                    O
+       x                                                     42.103
+       y                                                     23.252
+       z                                                     48.275
+       Residue                                                 A129
+       Line       ATOM   1001  OD1 ASP A 129      42.103  23.252...
+
 
 Full documentation is available at
 https://docs.readthedocs.io/en/stable/tutorial/
