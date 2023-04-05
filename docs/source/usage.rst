@@ -10,19 +10,16 @@ To use Lumache, first install it using pip:
 
 .. code-block:: console
 
-   (.venv) $ pip install lumache
+   (.venv) $ pip install proteinTools
 
-Creating recipes
+Creating Proteins
 ----------------
 
-To retrieve a list of random ingredients,
-you can use the ``lumache.get_random_ingredients()`` function:
+To create a protein item, you can use the ```Protein(<Identifier>, <species>) method, where 
+species is human by default:
 
-.. autofunction:: lumache.get_random_ingredients
+.. autofunction:: proteinTools.Protein('2D3Z', 'e coli')
 
-The ``kind`` parameter should be either ``"meat"``, ``"fish"``,
-or ``"veggies"``. Otherwise, :py:func:`lumache.get_random_ingredients`
-will raise an exception.
 
 .. autoexception:: lumache.InvalidKindError
 
