@@ -45,4 +45,4 @@ Contents
 .. toctree::
 
    usage
-   api
+   documentation
