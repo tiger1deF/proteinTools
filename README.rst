@@ -38,4 +38,4 @@ Output: ::
 
 
 Full documentation is available at
-https://docs.readthedocs.io/en/stable/tutorial/
+https://proteintools.readthedocs.io/en/latest/
