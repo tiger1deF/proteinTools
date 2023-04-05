@@ -18,6 +18,7 @@ Creating Proteins
 To create a protein item, you can use the ``Protein(<Identifier>, <species>)`` method, where 
 species is human by default:
 
-``proteinTools.Protein('2D3Z', 'e coli')``
+.. code-block:: console
+proteinTools.Protein('2D3Z', 'e coli')
 
 
