@@ -8,7 +8,7 @@ Installation
 
 To use proteinTools, first install it using pip:
 
-.. code-block:: console
+.. code-block:: bash
 
    (.venv) $ pip install proteinTools
 
@@ -19,6 +19,7 @@ To create a protein item, you can use the ``Protein(<Identifier>, <species>)`` m
 species is human by default:
 
 .. code-block:: console
-proteinTools.Protein('2D3Z', 'e coli')
+
+   proteinTools.Protein('2D3Z', 'e coli')
 
 
