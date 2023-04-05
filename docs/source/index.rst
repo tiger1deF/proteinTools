@@ -1,14 +1,40 @@
-Welcome to Lumache's documentation!
-===================================
+Protein Tools
+=======================================
+Developed by Christian de Frondeville and sponsored by the Barabasi Network Science Laboratories
 
-**Lumache** (/lu'make/) is a Python library for cooks and food lovers
-that creates recipes mixing random ingredients.
-It pulls data from the `Open Food Facts database <https://world.openfoodfacts.org/>`_
-and offers a *simple* and *intuitive* API.
+.. image:: https://github.com/ChatterjeeAyan/AI-Bind/blob/main/Images/NetSci_Logo.png
+   :width: 200px
+   :height: 100px
+   :scale: 50 %
+   :alt: alternate text
+   :align: right
 
-Check out the :doc:`usage` section for further information, including
-how to :ref:`installation` the project.
+ProteinTools is a lightweight, flexible, and robust package that simplifies interactions with proteins. Allows for easily obtaining protein identifiers, downloading protein structural files, identifying and processing residues/residue atoms, identifying protein/ligand interactions, and much more.
 
+Start by creating a protein class with the desired ChEMBL, PDB, Uniprot, or HGNC/Genecard identifier (including species if not human), and use the .download method (with an optional destination directory argument) to download the PDB structural file or Alphafold representation, which generates the residues, chains, atoms, and ligands if applicable, all with their own attributes and easily accessible from the protein class.::
+
+        import proteinTools
+        
+        protein = Protein('1H4K')
+        print(protein.Uniprot)
+        print(protein.residues('A44')
+        print(protein[1:3])
+        print(protein.atoms(1000))
+       
+Output: ::
+
+        P07268
+        Chain                                                         A
+        Amino Acid                                                  ASN
+        Index                                                        44
+        Atoms         [<__main__.atom object at 0x2b937fb49eb0>, <__...
+        [<__main__.residue object at 0x2b937f95e220>, <__main__.residue object at 0x2b937f95ee80>]
+        Element                                                    O
+       x                                                     42.103
+       y                                                     23.252
+       z                                                     48.275
+       Residue                                                 A129
+       Line       ATOM   1001  OD1 ASP A 129      42.103  23.252...
 .. note::
 
    This project is under active development.
