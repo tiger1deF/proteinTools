@@ -7,14 +7,14 @@ ProteinTools is a lightweight, flexible, and robust package that simplifies inte
 
 Start by creating a protein class with the desired ChEMBL, PDB, Uniprot, or HGNC/Genecard identifier (including species if not human), and use the .download method (with an optional destination directory argument) to download the PDB structural file or Alphafold representation, which generates the residues, chains, atoms, and ligands if applicable, all with their own attributes and easily accessible from the protein class.
 
-```
+``
 import proteinTools
 protein = Protein('1H4K')
 print(protein.Uniprot)
 print(protein.residues('A44')
 print(protein[1:3])
 print([<__main__.residue object at 0x2b937f95e220>, <__main__.residue object at 0x2b937f95ee80>])
-```
+``
 Output:
 ```
     P07268
