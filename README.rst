@@ -16,6 +16,7 @@ Start by creating a protein class with the desired ChEMBL, PDB, Uniprot, or HGNC
         print(protein[1:3])
        
 Output: ::
+
         P07268
         Chain                                                         A
         Amino Acid                                                  ASN
