@@ -2,9 +2,3 @@
 
 Contents
 --------
-
-.. toctree::
-
-   usage
-   documentation
-
