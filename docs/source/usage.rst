@@ -18,7 +18,7 @@ Creating Proteins
 To create a protein item, you can use the ``Protein(<Identifier>, <species>)`` method, where 
 species is human by default:
 
-.. code-block:: console
+.. code-block:: python
 
    proteinTools.Protein('2D3Z', 'e coli')
 
