@@ -17,9 +17,9 @@ Start by creating a protein class with the desired ChEMBL, PDB, Uniprot, or HGNC
 Output: ::
 
         P07268
-        Chain                                                         A
-        Amino Acid                                                  ASN
-        Index                                                        44
+        Chain                                                     A
+        Amino Acid                                              ASN
+        Index                                                    44
         Atoms         [<__main__.atom object at 0x2b937fb49eb0>, <__...
         [<__main__.residue object at 0x2b937f95e220>, <__main__.residue object at 0x2b937f95ee80>]
         Element                                                   O
