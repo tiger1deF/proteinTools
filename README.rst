@@ -29,7 +29,7 @@ Start by creating a protein class with the desired ChEMBL, PDB, Uniprot, or HGNC
         print(protein.FASTA)
        
 Output: 
-.. code-block:: console
+::
 
         P07268
         Chain                                                     A
