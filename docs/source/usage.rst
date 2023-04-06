@@ -43,9 +43,8 @@ Residues can be queried by indexing as one would a list.
 
 .. code-block:: python
 
-   myprot[1:3]
+   myprot[100:350]
    myprot[100]
-   myprot.residues('A_55')
    
 Residues and atoms can also be accessed via the .atoms and .residues method, which returns a series containing the properties.
 
