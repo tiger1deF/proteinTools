@@ -29,6 +29,9 @@ The protein file can than be downloaded to a directory (default the user's curre
    newprot = p.Protein('P02786', 'Uniprot', 'human')
    myprot.download('/path/to/directory')
    
+   newprot = p.Protein('L2HGDH', 'HGNC')
+   myprot.download('/path/to/directory')
+   
 Protein Properties
 ------------------
 The protein's ChEMBL ID, Uniprot ID, PDB ID, and HGNC/Gene ID can all be accessed with properties of the same name.
