@@ -22,7 +22,7 @@ The protein file can than be downloaded to a directory (default the user's curre
 
 .. code-block:: python
 
-   import proteinTools as p
+   from proteinTools import Protein as p
    myprot = p.Protein('2D3Z', 'e coli')
    myprot.download('/path/to/directory')
    
