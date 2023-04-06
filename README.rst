@@ -20,6 +20,7 @@ Start by creating a protein class with the desired ChEMBL, PDB, Uniprot, or HGNC
         from proteinTools import protein as p
         
         protein = p.Protein('1H4K')
+        protein.download('/home/usr/proteins')
         print(protein.Uniprot)
         print(protein.residues('A44')
         print(protein[1:3])
