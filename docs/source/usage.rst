@@ -96,7 +96,7 @@ The x, y, and z coordinate of atoms, as well as their mass, element, line (line 
    for atom in residue.atoms:
         elements.append(atom.element)
    
-Ligand Methods
+Ligand Properties
 --------------
 If the protein is a PDB file containing ligands (that are not water molecules), they will automatically be added to the .ligands protein attribute. The ligand ID as present in the PDB file can be accessed with the ID attribute, and atoms of the atom class can be accessed with the atoms attribute.
 
