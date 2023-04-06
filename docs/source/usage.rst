@@ -104,9 +104,11 @@ If the protein is a PDB file containing ligands (that are not water molecules), 
 
 The center of mass of each ligand can be calculated with the ``.center`` property.
 
-The ligand file can be downloaded by the .download('/path/to/file') method, which defaults to the user's current directory and saves the ligand in .sdf format.
+The ligand file can be downloaded by the ``.download('/path/to/file')`` method, which defaults to the user's current directory and saves the ligand in .sdf format.
 
 .. code-block:: python
 
    ligand = protein.ligand[3]
    ligand.download()
+   for ligand in protein.ligands:
+      print(ligand.ID)
