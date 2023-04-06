@@ -111,4 +111,4 @@ The ligand file can be downloaded by the ``.download('/path/to/file')`` method, 
    ligand = protein.ligand[3]
    ligand.download()
    for ligand in protein.ligands:
-      print(ligand.ID)
+       print(ligand.ID)
