@@ -34,7 +34,7 @@ The protein file can than be downloaded to a directory (default the user's curre
    
 Protein Properties
 ------------------
-The protein's ChEMBL ID, Uniprot ID, PDB ID, and HGNC/Gene ID can all be accessed with properties of the same name.
+The protein's ChEMBL ID, Uniprot ID, PDB ID, and HGNC/Gene ID can all be accessed with properties of the same name. For PDB IDs, proteinTools returns a dataframe containing the PDB ID(s), minimum resolution of the PDB file in Angstroms, and 
 
 .. code-block:: python
    
@@ -74,6 +74,12 @@ The total amount of residues in the protein is obtainable simply by using the le
 
    protein_length = len(myprot)
    
+A list of every atom in the protein and their properties can be created with the .to_csv(<destination>) method, where the default destination is the user's current directory.
+
+.. code-block:: python
+  
+   myprot.to_csv('/path/to/directory')
+
 Residue Properties
 -------------------
 
