@@ -41,6 +41,7 @@ The protein's ChEMBL ID, Uniprot ID, PDB ID, and HGNC/Gene ID can all be accesse
    myprot.Uniprot
    myprot.HGNC
    myprot.ChEMBL
+   myprot.PDB
 
 Residues can be queried by indexing as one would a list.
 
