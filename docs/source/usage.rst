@@ -16,7 +16,7 @@ Creating Proteins
 ----------------
 
 To create a protein item, you can use the ``Protein(<Identifier>, <species>)`` method, where 
-species is human by default. Identifiers can be ChEMBL IDs, UniprotKB/Uniprot IDs, PDB IDs, or HGNC/Genecard IDs. 
+species is optional (human by default). Identifiers can be ChEMBL IDs, UniprotKB/Uniprot IDs, PDB IDs, or HGNC/Genecard IDs. 
 
 The protein file can than be downloaded to a directory (default the user's current directory) with the ``.download`` method. Upon downloading the protein file (.pdb/.mmCIF from RCSB in the case of a PDB ID, or an Alphafold-generated structure otherwise), the protein will be populated with chains, residues, atoms, and other identifiers from the file.
 
@@ -28,7 +28,7 @@ The protein file can than be downloaded to a directory (default the user's curre
    
 Protein Properties
 ------------------
-The protein's ChEMBL ID, Uniprot ID, PDB ID, and HGNC/Gene ID can all be accessed with properties of the same name
+The protein's ChEMBL ID, Uniprot ID, PDB ID, and HGNC/Gene ID can all be accessed with properties of the same name.
 
 .. code-block:: python
    
@@ -36,13 +36,26 @@ The protein's ChEMBL ID, Uniprot ID, PDB ID, and HGNC/Gene ID can all be accesse
    myprot.HGNC
    myprot.ChEMBL
 
-Residues can be queried by indexing, or by using the residues method.
+Residues can be queried by indexing as one would a list.
 
 .. code-block:: python
 
    myprot[1:3]
    myprot[100]
    myprot.residues('A_55')
+   
+Residues and atoms can also be accessed via the .atoms and .residues method, which returns a series containing the properties.
+
+.. code-block:: python
+   
+   myprot.residues('A_144')
+   myprot.atom(6572)
+   
+The protein's FASTA sequence can be easily accessed by the FASTA property, which generates a FASTA sequence directly from the file.
+
+.. code-block:: python
+
+   myprot.FASTA
    
 Protein interactions can be accessed with the property of the same name, returning BindingDB ligands and their activities, ChEMBL ligands and their activities (all in uM) and the ID of STITCH ligands and proteins, all returned in a dictionary.
 
@@ -63,14 +76,35 @@ Residue amino acids (AA), chain, atoms, index, and name can be accessed by prope
 
 .. code-block:: python
 
-   protein[1].name
-   protein.residues('A433')['Name']
-   protein[5].AA
-   protein[8].chain
-   protein[2].atoms
+   myprot[1].name
+   myprot.residues('A433')['Name']
+   myprot[5].AA
+   myprot[8].chain
+   myprot[2].atoms
+   residues = myprot[1:100]
 
-The center of mass of each residue can be calculated with the ``.center`` property.
+The center of mass of each residue can be calculated with the ``.center`` property, which returns a list of the x, y, and z coordinate of the residue center.
 
 Atom Properties
 ----------------
 
+The x, y, and z coordinate of atoms, as well as their mass, element, line (line data from protein file), and the residue it is part of can be accessed by properties of the same title.
+
+.. code-block:: python
+
+   residue, elements = myprot.residue('B123'), []
+   for atom in residue.atoms:
+        elements.append(atom.element)
+   
+Ligand Methods
+--------------
+If the protein is a PDB file containing ligands (that are not water molecules), they will automatically be added to the .ligands protein attribute. The ligand ID as present in the PDB file can be accessed with the ID attribute, and atoms of the atom class can be accessed with the atoms attribute.
+
+The center of mass of each ligand can be calculated with the ``.center`` property.
+
+The ligand file can be downloaded by the .download('/path/to/file') method, which defaults to the user's current directory and saves the ligand in .sdf format.
+
+.. code-block:: python
+
+   ligand = protein.ligand[3]
+   ligand.download()
