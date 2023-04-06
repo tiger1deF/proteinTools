@@ -36,6 +36,3 @@ Contents
 --------
 
 .. toctree::
-
-   usage
-   documentation
