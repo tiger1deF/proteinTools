@@ -102,7 +102,7 @@ Residue amino acids (AA), chain, atoms, index, and name can be accessed by prope
 .. code-block:: python
 
    myprot[1].name
-   myprot.residues('A433')['Name']
+   myprot.residues('A433')['name']
    myprot[5].AA
    myprot[8].chain
    myprot[2].atoms
