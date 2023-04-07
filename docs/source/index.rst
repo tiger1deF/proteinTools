@@ -21,17 +21,17 @@ Start by creating a protein class with the desired ChEMBL, PDB, Uniprot, or HGNC
 Output: ::
 
         P07268
-        Chain                                                     A
-        Amino Acid                                              ASN
-        Index                                                    44
-        Atoms         [<__main__.atom object at 0x2b937fb49eb0>, <__...
-        [<__main__.residue object at 0x2b937f95e220>, <__main__.residue object at 0x2b937f95ee80>]
+        chain                                                     A
+        AA                                                      ASN
+        index                                                    44
+        atoms         [<__main__.atom object at 0x2b937fb49eb0>...
+        [<__main__.residue object at 0x2b937f95e220>, <__main__...
         Element                                                   O
-       x                                                     42.103
-       y                                                     23.252
-       z                                                     48.275
-       Residue                                                 A129
-       Line       ATOM   1001  OD1 ASP A 129      42.103  23.252...
+        x                                                    42.103
+        y                                                    23.252
+        z                                                    48.275
+        residue                                                A129
+        line       ATOM   1001  OD1 ASP A 129      42.103  23.252...
 .. note::
 
    This project is under active development.
