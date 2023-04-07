@@ -34,12 +34,12 @@ The protein file can than be downloaded to a directory (default the user's curre
    
 Protein Properties
 ------------------
-The protein's ChEMBL ID, Uniprot ID, PDB ID, and HGNC/Gene ID can all be accessed with properties of the same name. For PDB IDs, proteinTools returns a **dataframe** containing the PDB ID(s), minimum resolution of the PDB file in Angstroms, and the total number of unique ligands present in the file.
+The protein's ChEMBL ID, Uniprot ID, PDB ID, and Gene ID can all be accessed with properties of the same name. For PDB IDs, proteinTools returns a **dataframe** containing the PDB ID(s), minimum resolution of the PDB file in Angstroms, and the total number of unique ligands present in the file.
 
 .. code-block:: python
    
    myprot.Uniprot
-   myprot.HGNC
+   myprot.Gene
    myprot.ChEMBL
    myprot.PDB
 
