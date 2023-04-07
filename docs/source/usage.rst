@@ -81,6 +81,19 @@ A list of every atom in the protein and their properties can be created with the
   
    myprot.to_csv('/path/to/directory')
 
+the .ligands method (only for PDB proteins) returns a single-row dataframe containing the primary ligand as well as all unique cofactors in the protein structure.
+
+.. code-block:: python
+
+   unique_ligands = myprot.ligands
+
+Ligands can be queried from the .ligand_list attribute, which returns a list of every unique ligand position of every ligand present in the structural file (outside of water moelecules). Ligand properties are described below.
+
+.. code-block:: python
+
+   for ligand in myprot.ligand_list:
+         ligands.append(ligand)
+         
 Residue Properties
 -------------------
 
