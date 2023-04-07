@@ -131,7 +131,8 @@ The ligand file can be downloaded by the ``.download('/path/to/file')`` method, 
 
 .. code-block:: python
 
-   ligand = protein.ligand[3]
+   ligand = protein.ligand_list[3]
    ligand.download()
-   for ligand in protein.ligands:
+   for ligand in protein.ligand_list:
        print(ligand.ID)
+       print(ligand.center)
