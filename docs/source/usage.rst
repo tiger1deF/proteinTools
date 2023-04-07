@@ -43,14 +43,14 @@ The protein's ChEMBL ID, Uniprot ID, PDB ID, and Gene ID can all be accessed wit
    myprot.ChEMBL
    myprot.PDB
 
-Residues can be queried by indexing as one would a list.
+Protein residues can be queried by indexing as one would a list.
 
 .. code-block:: python
 
    myprot[100:350]
    myprot[100]
    
-Residues and atoms can also be accessed via the .atoms and .residues method, which returns a series containing the properties.
+Residues and atoms can also be accessed via the .atoms and .residues method, which returns a series containing the properties of the residue.
 
 .. code-block:: python
    
