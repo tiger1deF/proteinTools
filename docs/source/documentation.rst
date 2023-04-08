@@ -126,4 +126,3 @@ The ligand file can be downloaded by the ``.download('/path/to/file')`` method, 
        
 .. toctree::
       installation
-      documentation
