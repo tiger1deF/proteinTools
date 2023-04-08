@@ -1,22 +1,5 @@
 .. note:: Python 3 is required to run proteinTools. Any version of python 2 is currently not supported
 
-.. _installation:
-
-Installation
-------------
-
-proteinTools can be easily installed using pip.
-
-.. code-block:: bash
-
-   (.venv) $ pip install proteinTools
-   
-The flexible proteins submodule can then be imported from the base package as follows.
-
-.. code-block:: python
-
-   from proteinTools import proteins as p
-
 Creating Proteins
 ----------------
 
@@ -26,7 +9,7 @@ species is optional (human by default) and protein-ID is also optional (PDB by d
 The protein file can than be downloaded to a directory (default the user's current directory) with the ``.download`` method. Upon downloading the protein file (.pdb/.mmCIF from RCSB in the case of a PDB ID, or an Alphafold-generated structure otherwise), the protein will be populated with chains, residues, atoms, and other identifiers from the file.
 
 .. code-block:: python
-
+   from proteinTools import proteins as p
    myprot = p.Protein('2D3Z', 'e coli')
    myprot.download('/path/to/directory')
    
