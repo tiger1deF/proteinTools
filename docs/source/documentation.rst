@@ -123,3 +123,7 @@ The ligand file can be downloaded by the ``.download('/path/to/file')`` method, 
    for ligand in protein.ligand_list:
        print(ligand.ID)
        print(ligand.center)
+       
+.. toctree::
+      installation
+      documentation
