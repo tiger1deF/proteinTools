@@ -40,4 +40,5 @@ Contents
 --------
 
 .. toctree::
-      usage
+      installation
+      documentation
