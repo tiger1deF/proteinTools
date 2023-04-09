@@ -41,4 +41,3 @@ Contents
 
 .. toctree::
       installation
-      documentation
