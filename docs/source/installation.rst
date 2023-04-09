@@ -17,6 +17,3 @@ The flexible proteins submodule can then be imported from the base package as fo
 .. code-block:: python
 
    from proteinTools import PT as p
-
-.. toctree::
-      documentation
