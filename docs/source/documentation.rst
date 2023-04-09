@@ -124,6 +124,4 @@ The ligand file can be downloaded by the ``.download('/path/to/file')`` method, 
        print(ligand.ID)
        print(ligand.center)
        
-.. toctree::
-      installation
    
