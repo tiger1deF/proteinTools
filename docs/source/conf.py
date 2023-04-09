@@ -7,7 +7,7 @@ copyright = '2023, Christian de Frondeville'
 author = 'Christian de Frondeville'
 
 release = '0.1'
-version = '0.0.8'
+version = '0.1.8'
 
 # -- General configuration
 
