@@ -16,7 +16,7 @@ release = '0.1.8'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 # Add napoleon to the extensions list
-extensions = ['sphinxcontrib.napoleon']
+extensions = ['sphinx.ext.napoleon']
 # -- Project information
 
 templates_path = ['_templates']
