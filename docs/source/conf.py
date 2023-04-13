@@ -12,14 +12,19 @@ sys.path.insert(0, os.path.abspath('../proteinTools'))
 project = 'proteinTools'
 copyright = '2023, Christian de Frondeville'
 author = 'Christian de Frondeville'
-release = '0.1.8'
+release = '0.1.9'
 
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-# Add napoleon to the extensions list
-extensions = []
+extensions = [
+   'sphinx.ext.duration',
+   'sphinx.ext.doctest',
+   'sphinx.ext.autodoc',
+   'sphinx.ext.autosummary',
+]
+
 # -- Project information
 
 templates_path = ['_templates']
