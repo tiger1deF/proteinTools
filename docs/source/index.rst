@@ -41,5 +41,4 @@ Contents
 
 .. toctree::
       installation
-      proteinTools
-      proteinTools.PT
+      api
