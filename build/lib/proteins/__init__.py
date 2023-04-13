@@ -1,1 +1,0 @@
-from proteinTools.proteins import *
