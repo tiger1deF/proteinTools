@@ -38,7 +38,11 @@ Output: ::
 Contents
 --------
 
-.. toctree::
-      installation
-      api	
-      generated/proteinTools
+Modules
+=======
+
+.. autosummary::
+   :toctree: modules
+
+   proteinTools.PT
+   installation

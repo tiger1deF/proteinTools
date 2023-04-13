@@ -1,5 +1,8 @@
 API
 ===
+.. currentmodule:: proteinTools
 
-.. automodule:: proteinTools
-   :members:
+.. autosummary::
+
+   environment.BuildEnvironment
+   util.relative_uri
