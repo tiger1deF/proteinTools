@@ -20,9 +20,14 @@ FASTAdict = {'ALA':'A', 'ALX':'B', 'CYS': 'C', 'ASP' : 'D', 'GLU': 'E', 'PHE': '
 atom_dict = {'H':1.01, 'C':12.01, 'O':16.00, 'N':14.01, 'P':30.97, 'F':18.998, 'S':32.06, 'B':10.81, 'K':39.1, 'I':126.904, 'BR':79.904, 'CL':35.453, 'CA':40.08, 'NA':22.99, 'MG':24.305, 'AL':26.98, 'CR':51.996, 'NE':20.179, 'BE':9.01, 'FE':55.847, 'CO':58.933,'AG':107.868, 'CD':112.41, 'NI':58.693, 'ZN':65.39, 'BE':9.0122, 'IN':114.818, 'SI':28.085, 'SC':44.956, 'TI':47.867, 'V':50.941, 'MN':54.938, 'CU':63.546, 'GA':59.723, 'GE':72.64, 'SE':78.96, 'KR':83.8, 'ZR':91.224, 'NB':92.906, 'PD':106.42, 'SN':118.71, 'SB':121.76, 'XE':131.293, 'BA':137.327, 'LA':138.91, 'LI':6.941, 'HG':200.59, 'PB':207.2, 'BI':208.98, 'PO':209, 'TI':204.3833, 'AU':196.9665, 'IR':192.217, 'PT':195.078, 'RE':186.207, 'W':183.84, 'TA':180.948, 'YB':173.04, 'EU':151.964, 'ND':144.25, 'CE':140.116, 'TH':232.04, 'U':238.029, 'PU':244, 'FR':223, 'PA':231.04, 'HO':164.93, 'SM':150.36, 'PR':140.908, 'TE':127.6, 'TC':98, 'Y':88.906}
 atom_keys = atom_dict.keys()
 
-#Subclass for individual atoms
 class atom:
+    """
+    Atom class
+
+    This class contains the essential parameters of an individual atom in a protein structural file, including the coordinates, element, atomic mass, parent residue, and line data.
+    """
     def __init__(self, element, x, y, z, data, residue = ''):
+        
         self.element = element
         self.x = x
         self.y = y
@@ -31,17 +36,31 @@ class atom:
         self.data = data
         self.mass = atom_dict[self.element]
              
-#Subclass for individual protein residues
 class residue:
+    """
+    Residue class
+    
+    This class contains the essential parameters of an individual residue in a protein structural file, including the child atoms, protein sidechain, residue index, and type of amino acid.
+    """
     def __init__(self, amino_acid, index, chain):
+        
         self.amino_acid = amino_acid
         self.index = index
         self.atoms = []
         self.chain = chain
             
-    #Calculates center of residue
     @cached_property
     def center(self):
+        """
+        Residue Center of Mass
+    
+        This property returns the center of mass of the residue, which is generated from all atom components. 
+    
+        Returns
+        -------
+        list
+            A list consisting of the x, y, and z coordinate in 3D space of the residue center of mass position for the protein structural file.
+        """
         x, y, z, totmass = 0, 0, 0, 0
         for atom in self.atoms:
             x += atom.x
@@ -53,8 +72,22 @@ class residue:
         z /= atom.mass
         return [x, y, z]
         
-    #Allows user to access residue atoms via indexing
     def __getitem__(self, key):
+        """
+        Residue Index
+    
+        This property returns the atom contained in the parent residue based on the index of the atom as it appears in the structural file.
+        
+        Parameters
+        ----------
+        index : int
+            The atom index
+
+        Returns
+        -------
+        class
+            Returns the atom class contained at the given index.
+        """
         try:  
             if isinstance(key, slice):
                 atoms = [i for index, i in enumerate(self.atoms) if index > key.start and index <= key.stop] 
@@ -66,26 +99,58 @@ class residue:
         except:
             pass
             
-    #Returns number of atoms in residue
     @lru_cache
     def __len__(self):
+        """
+        Residue Length
+    
+        This property returns the total number of atoms contained with the residue.
+    
+        Returns
+        -------
+        int
+            A number of all the atoms contained within the specific residue.
+        """
         return len(self.atoms)
         
-#Subclass for ligands in protein file (if present)
 class ligand:
+    """
+        Ligand Class
+    
+        This property returns the center of mass of the residue, which is generated from all atom components. 
+        """
     def __init__(self, ID):
         self.ID = ID
         self.sites = []
         self.atoms = []
         
-    #Downloads ligand from PDB database
+   
     def download(self, directory = os.getcwd()):
+        """
+        Download Ligand
+    
+        This method downloads the specific ligand structural file based on the ligand ID. 
+    
+        Parameters
+        ----------
+        arg1 : str
+            Directory structural file will be downloaded in. Defaults to current user directory.
+        """
         url = 'https://files.rcsb.org/ligands/download/' + self.ID + '_ideal.sdf'
         urllib.request.urlretrieve(url, directory + '/' + self.ID + '.sdf')
         
-    #Calculates the center of mass of the ligand position
     @cached_property
     def center(self):
+        """
+        Ligand Center of Mass
+    
+        This property returns the center of mass of the ligand, which is generated from all atom components. 
+    
+        Returns
+        -------
+        list
+            A list consisting of the x, y, and z coordinate in 3D space of the ligand center of mass position for the specific ligand pose registered within the file.
+        """
         x, y, z, totmass = 0, 0, 0, 0
         for atom in self.atoms:
             x += atom.x
@@ -99,6 +164,11 @@ class ligand:
         
 #Main protein class
 class Protein:
+    """
+    Protein Class
+
+    This class represents an individual protein, it's provided ID and relevant structural file (generated via Alphafold or scraped from RCSB), and analytical methods and properties for biostatistics and bioinformatics purposes.
+    """
     def __init__(self, protein_name, protein_type = 'PDB', species = 'human'):
         self.protein = protein_name
         self.ID_type = protein_type
@@ -111,15 +181,46 @@ class Protein:
         #length of each side chain
         self.chains = {}
         
-    #Returns length of protein
     def __len__(self):
+        """
+        Protein Length
+    
+        This property returns the total number of residues within the protein structural file.
+        
+        Returns
+        -------
+        int
+            The total number of residues within the protein.
+        """
         length = 0
-        for chain in self.chains:
-            length += self.chains[chain]
+        try:
+            for chain in self.chains:
+                length += self.chains[chain]
+        except:
+            length = 0
+            print('Protein structural file not downloaded!')
+            
         return length
     
-    #Allows user to access residues via indexing
     def __getitem__(self, key):
+        """
+        Residue Index
+    
+        This magic method allows the user to index the protein for individual residues by either slicing or accessing an individual residue.
+    
+        Parameters
+        ----------
+        slice : slice
+            A slice of the residues within the protein file.
+            
+        key : int
+            An index of the residue within the protein file.
+    
+        Returns
+        -------
+        class, list
+        Returns the class or the list of classes queried by the index.
+        """
         try:  
             if isinstance(key, slice):
                 residues = [i for index, i in enumerate(self.residue_list) if index > key.start and index <= key.stop] 
@@ -131,9 +232,18 @@ class Protein:
         except:
             print(traceback.format_exc())
             print('Protein file has not been downloaded yet! Download the protein with <protname>.download()')
-            
-    #Attempts to download protein file to a default directory (or a user-specified one)
+            )
     def download(self, destination = os.getcwd()):
+        """
+        Download Protein
+    
+        This method allows the user to download the simulated structural file of the specific protein from Alphafold (if a non-PDB ID is given) or a true structural file from RCSB (if a specific PDB ID is provided). Can identify process cif/mmcif files as well as .pdb files. Downloading the protein also collects all residue and atom information from the structural file, populating the attributes of the protein class.
+    
+        Parameters
+        ----------
+        destination : str
+            The destination of the protein file, defaulting to the current user directory.
+        """
         self.cif = False
                 
         #Downloads files from RCSB if they are PDB files
@@ -344,8 +454,17 @@ class Protein:
         for id_residue in self.residue_list:
             self.FASTA += FASTAdict[id_residue.amino_acid]
     
-    #Method that outputs all atoms in a .csv file
     def to_csv(self, destination = os.getcwd()):
+        """
+        Atoms to CSV
+    
+        This method returns a .csv file of each individual atom of the protein and all contained attributes within the atom.
+    
+        Parameters
+        ----------
+        destination : str
+            Destiation of the csv file. Defaults to the user's current directory
+        """
         atoms_x, atoms_y, atoms_z, atoms_element, atoms_residue, residue_index, residue_chain = [], [], [], [], [], [], []
         for count, residue in enumerate(self.residue_list):
             for atom in residue.atoms:
@@ -359,9 +478,18 @@ class Protein:
         atoms = pd.DataFrame.from_dict({'Atom x coordinate':atoms_x, 'Atom y coordinate':atoms_y, 'Atom z coordinate':atoms_z, 'Atom element':atoms_element, 'Atom residue':atoms_residue, 'residue index':residue_index, 'residue chain': residue_chain})
         atoms.to_csv(destination + '/Atoms' + self.protein + '.csv')
         
-    #Property for calculating center of mass of the protein
     @cached_property
     def center(self):
+        """
+        Protein Center of Mass
+    
+        This property returns the center of mass of the protein, which is generated from all atom components of each residue in the protein.
+    
+        Returns
+        -------
+        list
+            A list consisting of the x, y, and z coordinate in 3D space of the protein center of mass position for the protein structural file.
+        """
         try:
             x, y, z, totmass = 0, 0, 0, 0
             for res in self.residue_list:
@@ -377,9 +505,18 @@ class Protein:
         except:
             print('Protein not downloaded yet or downloaded incorrectly!')
     
-    #Property for obtaining list of ligand sites
     @cached_property
     def sites(self):
+        """
+        Docked Ligand Center of Mass
+    
+        This property returns the center of mass for each ligand position of each unique ligand type within the protein file.
+    
+        Returns
+        -------
+        dict
+            A dictionary containing the unique ligand identifier within the protein file (the key) and a list of the center of mass of each indivual ligand pose (the values)
+        """
         if self.ID_type != 'PDB':
             return 'Not a PDB file with valid binding sites!'
         else:
@@ -395,9 +532,23 @@ class Protein:
                     break
         return sites
     
-    #Method for indexing protein residues
     @lru_cache
     def residues(self, residue_index):
+        """
+        Residue Indexing
+    
+        This method allows for indexing residues with a numeric or a side chain-numeric (i.e. A244) identifier.
+    
+        Parameters
+        ----------
+        index : int, str
+            Numeric or string index of the residue.
+            
+        Returns
+        -------
+        class
+            Returns the residue class at the given index.
+        """
         try:
             try:
                 index = int(re.sub('[^0-9]', '', residue_index))
@@ -414,9 +565,23 @@ class Protein:
         except:
             return 'Index larger than number of residues!'
            
-    #Method for indexing protein atoms
     @lru_cache
     def atoms(self, atom_index):
+        """
+        Atom Indexing
+    
+        This method allows for indexing atoms with a numeric identifier.
+    
+        Parameters
+        ----------
+        index : int
+            Numeric index of the atom. 
+            
+        Returns
+        -------
+        class
+            Returns the atom class at the given index.
+        """
         ac = 0
         for res in self.residue_list:
             for atom in res.atoms:
@@ -427,8 +592,23 @@ class Protein:
                 ac += 1
         return 'Index is larger than total number of atoms!'
     
-    #Method for reconstructing section of protein
     def concat(self, start, stop, destination = os.getcwd()):
+        """
+        Residue Concatenation
+    
+        This method allows for the concatenation of residues into a sub-structural file containing only the indexed residues.
+    
+        Parameters
+        ----------
+        start : int
+            Starting numeric index of the first residue.
+            
+        stop: int
+            Final numeric index of the last residue in the sub-structure.
+            
+        destination: str
+            Location of the downloaded sub-structure, defaults to the user's current directory.
+        """
         residues, atoms = [i for i in self.residue_list if i >= start and i < stop], []
         for res in residues:
             for atom in res.atoms:
@@ -438,9 +618,18 @@ class Protein:
             for line in atoms:
                 f.write(line)
     
-    #Returns a uniprot identifier
     @cached_property
     def Uniprot(self):
+        """
+        Uniprot ID
+    
+        This properties allows for easy conversion of protein IDs to Uniprot IDs.
+
+        Returns
+        -------
+        str
+            Returns the Uniprot ID for the protein class.
+        """
         if self.ID_type.upper() == 'UNIPROT':
             return self.protein
         elif self.ID_type.upper() == 'PDB':
@@ -505,9 +694,18 @@ class Protein:
                 print('Cannot find valid Uniprot ID for protein ' + self.protein + '!')
                 return 'N/A'
     
-    #Returns a PDB identifier
     @cached_property 
     def PDB(self):
+        """
+        PDB ID
+    
+        This properties allows for easy conversion of protein IDs to PDB IDs. A pandas dataframe containing the number of unique ligands, number of residues, and the resolution of the electron microscope used to image the protein is returned.
+
+        Returns
+        -------
+        df
+            Returns a dataframe containing relevant properties for all PDB IDs associated with the protein ID.
+        """
         def scrape_data(PDB):  
             resdf = pd.DataFrame()
             resolutions, residue_number, lignums, proteins = [], [], [], []
@@ -625,9 +823,18 @@ class Protein:
                 return 'N/A'
         
     
-    #Returns HGNC identifier
     @cached_property
     def Gene(self):
+        """
+        Gene ID
+    
+        This properties allows for easy conversion of protein IDs to Gene IDs.
+
+        Returns
+        -------
+        str
+            Returns the Gene ID for the protein class.
+        """
         def search_uniprot(protein):
             url = 'https://rest.uniprot.org/uniprotkb/search?query=' + self.protein + '%20' + self.species
             Data = requests.get(url).text
@@ -659,9 +866,18 @@ class Protein:
              except:
                 return search_uniprot(self.protein)
             
-    #Returns ChEMBL identifier
     @cached_property
     def ChEMBL(self):
+        """
+        ChEMBL ID
+    
+        This properties allows for easy conversion of protein IDs to ChEMBL IDs.
+
+        Returns
+        -------
+        str
+            Returns the ChEMBL ID for the protein class.
+        """
         try:
             target = new_client.target
             gene_name = self.Gene
@@ -680,9 +896,18 @@ class Protein:
                 print('No ChEMBL ID found for ' + self.protein + '!')
                 return 'N/A'
          
-    #Property for obtaining protein ligands (if present in file)
     @cached_property
     def ligands(self):
+        """
+        Protein Ligands
+    
+        This property returns a series containing the ID of the primary ligand contained within the file, as well as the ID of all present confactors. Only returns ligands if the file is a PDB file with valid ligand structures contained.
+    
+        Returns
+        -------
+        df
+            A pandas dataframe containing the primary ligand IDs and cofactor IDs within the protein structural file.
+        """
         ligs = []
         for ligand in self.ligand_list:
             if ligand.ID not in ligs:
@@ -692,9 +917,18 @@ class Protein:
         ligands = pd.DataFrame.from_dict({'Primary Ligand':ligand, 'Cofactors':cofactors})
         return ligands
     
-    #Property for obtaining protein binders. Searches ChEMBL, BindingDB, and STITCH
     @cached_property   
     def interactions(self):
+        """
+        Protein Interactions
+    
+        This property allows the user to query the Bioinformatics databases STITCH, BindingDB, and ChEMBL for relevant protein-ligand and protein-protein interactions. BindingDB interactions are contained in a dataframe containing the Kd constant in nanoMolar. ChEMBL IDs are returned along with the IC50 or DC50 values in nanoMolar. STITCH data represents a dictionary-embedded list of all proteins and ligands with network-based interactions. If valid data cannot be pulled from any site, their output datatypes will not be included in output.
+    
+        Returns
+        -------
+        list
+            A list containing two dataframes for BindingDB and ChEMBL protein-ligand intearction data, as well as a dictionary containing all STITCH interactors for the given protein ID with a high confidence of interaction.
+        """
         try:
             #Queries bindingDB for ligand interactions
             try:
@@ -704,8 +938,8 @@ class Protein:
                 for tree in mytree:
                     if 'affinities' in i.tree:
                         ligands.append(i[1].text)
-                        Affinities.append(float(i[3].text))
-                BindingDB = pd.DataFrame.from_dict({'Ligands':ligands, 'Kd (uM)': Affinities})
+                        Affinities.append(float(i[3].text) * 1000)
+                BindingDB = pd.DataFrame.from_dict({'Ligands':ligands, 'Kd': Affinities})
             except:
                 print('BindingDB request timed out!')
                 
