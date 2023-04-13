@@ -45,4 +45,3 @@ Modules
    :toctree: modules
 
    proteinTools.PT
-   installation
