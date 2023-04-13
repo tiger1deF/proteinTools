@@ -33,15 +33,12 @@ Output: ::
         residue                                                A129
         line       ATOM   1001  OD1 ASP A 129      42.103  23.252...
 .. note::
+
    This project is under active development.
 
 Contents
 --------
 
-Modules
-=======
-
-.. autosummary::
-   :toctree: modules
-
-   proteinTools.PT
+.. toctree::
+      installation
+      documentation
