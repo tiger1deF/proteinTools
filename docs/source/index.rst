@@ -1,33 +1,44 @@
-# Configuration file for the Sphinx documentation builder.
+Protein Tools
+=======================================
+Developed by Christian de Frondeville and sponsored by the Barabasi Network Science Laboratories
 
-project = 'proteinTools'
-copyright = '2023, Christian de Frondeville'
-author = 'Christian de Frondeville'
+ProteinTools is a lightweight, flexible, and robust package that simplifies interactions with proteins. Allows for easily obtaining protein identifiers, downloading protein structural files, identifying and processing residues/residue atoms, identifying protein/ligand interactions, and much more.
 
-release = '0.1'
-version = '0.1.8'
+ProteinTools can be downloaded via pip. ::
 
-# -- General configuration
+        pip install proteinTools
 
-extensions = [
-    'sphinx.ext.duration',
-    'sphinx.ext.doctest',
-    'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.intersphinx',
-]
+Start by creating a protein class with the desired ChEMBL, PDB, Uniprot, or HGNC/Genecard identifier (including species if not human), and use the .download method (with an optional destination directory argument) to download the PDB structural file or Alphafold representation, which generates the residues, chains, atoms, and ligands if applicable, all with their own attributes and easily accessible from the protein class.::
 
-intersphinx_mapping = {
-    'python': ('https://docs.python.org/3/', None),
-    'sphinx': ('https://www.sphinx-doc.org/en/master/', None),
-}
-intersphinx_disabled_domains = ['std']
+        from proteinTools import PT as p
+        
+        protein = p.Protein('1H4K')
+        print(protein.Uniprot)
+        print(protein.residues('A44')
+        print(protein[1:3])
+        print(protein.atoms(1000))
+       
+Output: ::
 
-templates_path = ['_templates']
+        P07268
+        chain                                                     A
+        AA                                                      ASN
+        index                                                    44
+        atoms         [<__main__.atom object at 0x2b937fb49eb0>...
+        [<__main__.residue object at 0x2b937f95e220>, <__main__...
+        Element                                                   O
+        x                                                    42.103
+        y                                                    23.252
+        z                                                    48.275
+        residue                                                A129
+        line       ATOM   1001  OD1 ASP A 129      42.103  23.252...
+.. note::
 
-# -- Options for HTML output
+   This project is under active development.
 
-html_theme = 'sphinx_rtd_theme'
+Contents
+--------
 
-# -- Options for EPUB output
-epub_show_urls = 'footnote'
+.. toctree::
+      installation
+      documentation
