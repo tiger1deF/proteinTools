@@ -11,6 +11,6 @@ setuptools.setup(
     description = "Lightweight package which simplifies interacting with proteins.",
     long_description = long_description,
     packages = ["proteinTools"],
-    
+    install_requires=['pandas','urllib3','chembl-webresource-client','mygene']
 
 )

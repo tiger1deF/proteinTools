@@ -11,10 +11,13 @@ copyright = '2023, Christian de Frondeville'
 author = 'Christian de Frondeville'
 release = '0.1.8'
 
+
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = []
+# Add napoleon to the extensions list
+extensions = ['sphinxcontrib.napoleon']
+# -- Project information
 
 templates_path = ['_templates']
 exclude_patterns = []

@@ -1,9 +1,5 @@
 # Configuration file for the Sphinx documentation builder.
 
-# Add napoleon to the extensions list
-extensions = ['sphinxcontrib.napoleon']
-# -- Project information
-
 project = 'proteinTools'
 copyright = '2023, Christian de Frondeville'
 author = 'Christian de Frondeville'
@@ -35,18 +31,3 @@ html_theme = 'sphinx_rtd_theme'
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
-Footer
-© 2023 GitHub, Inc.
-Footer navigation
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
-proteinTools/conf.py at main · tiger1deF/proteinTools
