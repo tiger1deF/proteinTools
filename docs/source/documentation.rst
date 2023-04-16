@@ -112,12 +112,15 @@ Ligand Properties
 --------------
 If the protein is a PDB file containing ligands (that are not water molecules), they will automatically be added to the .ligands protein attribute. The ligand ID as present in the PDB file can be accessed with the ID attribute, and atoms of the atom class can be accessed with the atoms attribute.
 
-The center of mass of each ligand can be calculated with the ``.center`` property.
+The center of mass and the radius of gyration of each ligand can be calculated via their respective properties>
+
+.. code-block:: python
+   ligand.center
+   ligand.radius
 
 The ligand file can be downloaded by the ``.download('/path/to/file')`` method, which defaults to the user's current directory and saves the ligand in .sdf format.
 
 .. code-block:: python
-
    ligand = protein.ligand_list[3]
    ligand.download()
    for ligand in protein.ligand_list:
