@@ -97,6 +97,16 @@ Residue amino acids (AA), chain, atoms, index, and name can be accessed by prope
 
 The center of mass of each residue can be calculated with the ``.center`` property, which returns a list of the x, y, and z coordinate of the residue center.
 
+.. code-block:: python
+
+   residue_center = myprot[1].center
+   
+If the protein has a PDB ID format, the secondary structure of each residue can also be obtained with the structure property.
+
+.. code-block:: python
+
+   residue_structure = myprot[160].structure
+
 Atom Properties
 ----------------
 
