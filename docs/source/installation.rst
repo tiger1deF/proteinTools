@@ -3,9 +3,6 @@ Installation
 
 .. _installation:
 
-Installation
-------------
-
 proteinTools can be easily installed using pip.
 
 .. code-block:: bash
