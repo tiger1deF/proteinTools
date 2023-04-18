@@ -9,7 +9,8 @@ species is optional (human by default) and protein-ID is also optional (PDB by d
 The protein file can than be downloaded to a directory (default the user's current directory) with the ``.download`` method. Upon downloading the protein file (.pdb/.mmCIF from RCSB in the case of a PDB ID, or an Alphafold-generated structure otherwise), the protein will be populated with chains, residues, atoms, and other identifiers from the file.
 
 .. code-block:: python
-   from proteinTools import proteins as p
+
+   from proteinTools import PT as p
    myprot = p.Protein('2D3Z', 'e coli')
    myprot.download('/path/to/directory')
    
@@ -81,6 +82,10 @@ Ligands can be queried from the .ligand_list attribute, which returns a list of 
    for ligand in myprot.ligand_list:
          ligands.append(ligand)
          
+.. warning:: 
+
+   CIF (mmCIF) files are currently supported by proteinTools, but certain functionalities (stripping ligand sites and secondary structure) are not available.
+   
 Residue Properties
 -------------------
 
