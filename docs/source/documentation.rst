@@ -143,7 +143,7 @@ Ligand files can also be instantiated separate of the protein. Simply generate t
 
 .. code-block:: python
 
-    lig = ligand('C1=CC=C2C(=C1)C=CC=C2CCC(CO)N3C=C(N=C3)C(=O)N')
+    lig = p.ligand('C1=CC=C2C(=C1)C=CC=C2CCC(CO)N3C=C(N=C3)C(=O)N')
     lig.download('/path/to/directory')
     
     
