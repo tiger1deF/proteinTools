@@ -139,4 +139,11 @@ The ligand file can be downloaded by the ``.download('/path/to/file')`` method, 
        print(ligand.ID)
        print(ligand.center)
        
-   
+Ligand files can also be instantiated separate of the protein. Simply generate the ligand with the ligand ID, and use the .download method with the path to download (defaults to the current user directory). InChiKeys, PDB IDs, and SMILEs sequences are accepted.
+
+.. code-block:: python
+    lig = ligand('C1=CC=C2C(=C1)C=CC=C2CCC(CO)N3C=C(N=C3)C(=O)N')
+    lig.download('/path/to/directory')
+    
+    
+
