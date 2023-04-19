@@ -106,7 +106,7 @@ The center of mass of each residue can be calculated with the ``.center`` proper
 
    residue_center = myprot[1].center
    
-If the protein has a PDB ID format, the secondary structure of each residue can also be obtained with the structure property.
+If the protein has a PDB ID format, the secondary structure of each residue can also be obtained with the structure property (between HELIX, SHEET, and UNSTRUCTURED). 
 
 .. code-block:: python
 
@@ -115,7 +115,7 @@ If the protein has a PDB ID format, the secondary structure of each residue can 
 Atom Properties
 ----------------
 
-The x, y, and z coordinate of atoms, as well as their mass, element, line (line data from protein file), and the residue it is part of can be accessed by properties of the same title.
+The x, y, and z coordinate of atoms, as well as their mass, element, line (line data from protein file) can be accessed by properties of the same title.
 
 .. code-block:: python
 
@@ -123,6 +123,13 @@ The x, y, and z coordinate of atoms, as well as their mass, element, line (line 
    for atom in residue.atoms:
         elements.append(atom.element)
    
+The parent residue for atoms constructed via a protein file can be accessed with the ``.residues`` property.
+
+.. code-block:: python
+   
+   for atoms in residue.atoms:
+      protein_chain = atoms.residue.chain    
+    
 Ligand Properties
 --------------
 If the protein is a PDB file containing ligands (that are not water molecules), they will automatically be added to the .ligands protein attribute. The ligand ID as present in the PDB file can be accessed with the ID attribute, and atoms of the atom class can be accessed with the atoms attribute.
@@ -152,4 +159,6 @@ Ligand files can also be instantiated separate of the protein. Simply generate t
     lig.download('/path/to/directory')
     
     
+.. warning:: 
 
+   The above functionality depends on the package openbabel, where the most reliable version can be accessed here: https://www.nextflow.io/docs/latest/conda.html
