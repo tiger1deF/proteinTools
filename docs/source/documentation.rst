@@ -115,13 +115,14 @@ If the protein has a PDB ID format, the secondary structure of each residue can 
 Atom Properties
 ----------------
 
-The x, y, and z coordinate of atoms, as well as their mass, element, line (line data from protein file) can be accessed by properties of the same title.
+The x, y, and z coordinate of atoms, as well as their mass, element, line (line data from protein file), and atomic radius can be accessed by properties of the same title.
 
 .. code-block:: python
 
    residue, elements = myprot.residue('B123'), []
    for atom in residue.atoms:
         elements.append(atom.element)
+        atom_volume = 4 / 3 * pow(atom.radius, 3)
    
 The parent residue for atoms constructed via a protein file can be accessed with the ``.parent_residues`` property.
 
