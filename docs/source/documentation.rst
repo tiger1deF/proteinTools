@@ -82,7 +82,7 @@ Ligands can be queried from the .ligand_list attribute, which returns a list of 
    for ligand in myprot.ligand_list:
          ligands.append(ligand)
          
-.. note:: 
+.. Note:: 
 
    CIF (mmCIF) files are currently supported by proteinTools, but certain functionalities (stripping ligand sites and secondary structure) are not available.
    
