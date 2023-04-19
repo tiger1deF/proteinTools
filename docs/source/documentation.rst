@@ -161,4 +161,4 @@ Ligand files can also be instantiated separate of the protein. Simply generate t
     
 .. warning:: 
 
-   The above functionality depends on the package openbabel, where the most reliable version can be accessed here: https://www.nextflow.io/docs/latest/conda.html
+   The above functionality depends on the chemical structure package Openbabel. The most reliable version can be accessed here: https://www.nextflow.io/docs/latest/conda.html
