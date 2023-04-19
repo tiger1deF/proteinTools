@@ -9,7 +9,7 @@ proteinTools can be easily installed using pip.
 
    (.venv) $ pip install proteinTools
    
-The flexible proteins submodule can then be imported from the base package as follows.
+The primary PT toolbox can then be imported from the base package as follows.
 
 .. code-block:: python
 
