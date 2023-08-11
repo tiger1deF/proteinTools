@@ -51,12 +51,18 @@ The protein's FASTA sequence can be easily accessed by the FASTA property, which
 
    myprot.FASTA
    
-Protein interactions can be accessed with the property of the same name, returning BindingDB ligands and their activities, ChEMBL ligands and their activities (all in uM) and the ID of STITCH ligands and proteins, all returned in a dictionary.
+Protein-ligand interactions can be accessed with the ligand_interactions property, returning a dictionary containing BindingDB ligands and their activities, ChEMBL ligands and their activities (all in uM) and the ID of STITCH ligands and proteins.
 
 .. code-block:: python
    
-   myprot.interactions
-   
+   myprot.ligand_interactions
+
+Protein-protein interactions can be accessed with the protein_interactions property, returning a dictionary containing stringDB protein keys with a list containing the maximum interaction score for the PPI and mean interaction score for the PPI. 
+
+.. code-block:: python
+
+    myprot.protein_interactions
+
 The total amount of residues in the protein is obtainable simply by using the len() magic method.
 
 .. code-block:: python
