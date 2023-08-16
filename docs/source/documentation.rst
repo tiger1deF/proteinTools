@@ -38,7 +38,7 @@ Protein residues can be queried by indexing as one would a list.
    myprot[100:350]
    myprot[100]
    
-Residues and atoms can also be accessed via the .atoms and .residues method, which returns a series containing the properties of the residue/atom.
+Residues and atoms can also be accessed via the .atoms and .residues method, which return the corrosponding atom and residue object.
 
 .. code-block:: python
    
