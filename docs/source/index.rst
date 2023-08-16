@@ -17,7 +17,8 @@ Start by creating a protein class with the desired ChEMBL, PDB, Uniprot, or HGNC
         print(protein.Uniprot)
         print(protein.residues('A44').chain)
         print(protein[1:3])
-        print(protein.atoms(1000))
+        print([protein.atoms(1000).x, protein.atoms(1000).y, protein.atoms(1000).z])
+        print(protein.atoms(1000).line)
        
 Output: ::
 
@@ -25,10 +26,7 @@ Output: ::
         A
         [<__main__.residue object at 0x2b937f95e220>, <__main__...
         Element                                                   O
-        x                                                    42.103
-        y                                                    23.252
-        z                                                    48.275
-        residue                                                A129
+        [42.103, 23.252, 48.275]
         line       ATOM   1001  OD1 ASP A 129      42.103  23.252...
 .. note::
 
