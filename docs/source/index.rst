@@ -15,17 +15,14 @@ Start by creating a protein class with the desired ChEMBL, PDB, Uniprot, or HGNC
         protein = p.Protein('1H4K')
         protein.download('/structural/protein/path')
         print(protein.Uniprot)
-        print(protein.residues('A44')
+        print(protein.residues('A44').chain)
         print(protein[1:3])
         print(protein.atoms(1000))
        
 Output: ::
 
         P07268
-        chain                                                     A
-        AA                                                      ASN
-        index                                                    44
-        atoms         [<__main__.atom object at 0x2b937fb49eb0>...
+        A
         [<__main__.residue object at 0x2b937f95e220>, <__main__...
         Element                                                   O
         x                                                    42.103
