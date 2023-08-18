@@ -4,7 +4,7 @@ Creating Proteins
 ----------------
 
 To create a protein structure, you can use the ``Protein(<Identifier>, <protein-ID> <species>)`` initializer, where 
-species is optional (human by default) and protein-ID is also optional (PDB by default). Identifiers can be ChEMBL IDs, UniprotKB/Uniprot IDs, PDB IDs, or HGNC/Genecard IDs. 
+species is optional (human by default) and protein-ID is also optional (PDB by default). Identifiers can be ChEMBL IDs, UniprotKB/Uniprot IDs, PDB IDs, or HGNC/Genecard IDs.
 
 The protein file can than be downloaded to a directory (default the user's current directory) with the ``.download`` method. Upon downloading the protein file (.pdb/.mmCIF from RCSB in the case of a PDB ID, or an Alphafold-generated structure otherwise), the protein will be populated with chains, residues, atoms, and other identifiers from the file.
 
@@ -22,7 +22,7 @@ The protein file can than be downloaded to a directory (default the user's curre
    
 Protein Properties
 ------------------
-The protein's ChEMBL ID, Uniprot ID, PDB ID, and Gene ID can all be accessed with properties of the same name. For PDB IDs, proteinTools returns a **dataframe** containing the PDB ID(s), minimum resolution of the PDB file in Angstroms, and the total number of unique ligands present in the file.
+The protein's ChEMBL ID, Uniprot ID, PDB ID, and Gene ID can all be accessed with properties of the same name. For PDB IDs, proteinTools returns a **dataframe** containing the PDB ID(s), minimum resolution of the PDB file in Angstroms, and the total number of unique ligands present in the file. The protein file does not need to be downloaded to access these values.
 
 .. code-block:: python
    
@@ -51,13 +51,13 @@ The protein's FASTA sequence can be easily accessed by the FASTA property, which
 
    myprot.FASTA
    
-Protein-ligand interactions can be accessed with the ligand_interactions property, returning a dictionary containing BindingDB ligands and their activities, ChEMBL ligands and their activities (all in uM) and the ID of STITCH ligands and proteins.
+Protein-ligand interactions can be accessed with the ligand_interactions property, returning a dictionary containing BindingDB ligands and their activities, ChEMBL ligands and their activities (all in uM) and the ID of STITCH ligands and proteins. The protein does not need to be downloaded to access these values.
 
 .. code-block:: python
    
    myprot.ligand_interactions
 
-Protein-protein interactions can be accessed with the protein_interactions property, returning a dictionary containing stringDB protein keys with a list containing the maximum interaction score for the PPI and mean interaction score for the PPI. 
+Protein-protein interactions can be accessed with the protein_interactions property, returning a dictionary containing stringDB protein keys with a list containing the maximum interaction score for the PPI and mean interaction score for the PPI. The protein does not need to be downloaded to access these values.
 
 .. code-block:: python
 
