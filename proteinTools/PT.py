@@ -5,20 +5,32 @@ import sys
 import csv
 import mygene 
 import requests
+import traceback
 from functools import cached_property, lru_cache
 import urllib
+import stringdb
+try:
+    import openbabel
+except:
+    pass
+import pubchempy as pcp
 import pandas as pd
 import numpy as np
 import traceback
 from io import StringIO
-from chembl_webresource_client.new_client import new_client
+#from chembl_webresource_client.new_client import new_client
 import re
 mg = mygene.MyGeneInfo()
+numconv = re.compile('[^0-9]')
 
 #Utility dictionaries containing element/mass mappings as well as FASTA mapping
 FASTAdict = {'ALA':'A', 'ALX':'B', 'CYS': 'C', 'ASP' : 'D', 'GLU': 'E', 'PHE': 'F', 'GLY': 'G', 'HIS': 'H', 'ILE': 'I', 'LYS':'K', 'LEU':'L', 'MET': 'M', 'ASN':'N', 'PRO':'P', 'GLN': 'Q', 'ARG':'R', 'SER': 'S', 'THR': 'T', 'VAL': 'V', 'TRP': 'W', 'UNK':'X', 'TYR':'Y', 'GLX':'Z'}
-atom_dict = {'H':1.01, 'C':12.01, 'O':16.00, 'N':14.01, 'P':30.97, 'F':18.998, 'S':32.06, 'B':10.81, 'K':39.1, 'I':126.904, 'BR':79.904, 'CL':35.453, 'CA':40.08, 'NA':22.99, 'MG':24.305, 'AL':26.98, 'CR':51.996, 'NE':20.179, 'BE':9.01, 'FE':55.847, 'CO':58.933,'AG':107.868, 'CD':112.41, 'NI':58.693, 'ZN':65.39, 'BE':9.0122, 'IN':114.818, 'SI':28.085, 'SC':44.956, 'TI':47.867, 'V':50.941, 'MN':54.938, 'CU':63.546, 'GA':59.723, 'GE':72.64, 'SE':78.96, 'KR':83.8, 'ZR':91.224, 'NB':92.906, 'PD':106.42, 'SN':118.71, 'SB':121.76, 'XE':131.293, 'BA':137.327, 'LA':138.91, 'LI':6.941, 'HG':200.59, 'PB':207.2, 'BI':208.98, 'PO':209, 'TI':204.3833, 'AU':196.9665, 'IR':192.217, 'PT':195.078, 'RE':186.207, 'W':183.84, 'TA':180.948, 'YB':173.04, 'EU':151.964, 'ND':144.25, 'CE':140.116, 'TH':232.04, 'U':238.029, 'PU':244, 'FR':223, 'PA':231.04, 'HO':164.93, 'SM':150.36, 'PR':140.908, 'TE':127.6, 'TC':98, 'Y':88.906}
+InverseFASTAdict = {'A':'ALA', 'B':'ALX', 'C':'CYS', 'D':'ASP', 'E':'GLU', 'F': 'PHE', 'G': 'GLY', 'H': 'HIS', 'I': 'ILE', 'K':'LYS', 'L':'LEU', 'M': 'MET', 'N':'ASN', 'P':'PRO', 'Q': 'GLN', 'R':'ARG', 'S': 'SER', 'T': 'THR', 'V': 'VAL', 'W': 'TRP', 'X':'UNK', 'U':'UNK', 'Y':'TYR', 'Z':'GLX'}
+atom_dict = {'H':1.01, 'C':12.01, 'O':16.00, 'N':14.01, 'P':30.97, 'F':18.998, 'FE':55.845, 'S':32.06, 'B':10.81, 'K':39.1, 'I':126.904, 'BR':79.904, 'CL':35.453, 'CA':40.08, 'NA':22.99, 'MG':24.305, 'AL':26.98, 'CR':51.996, 'NE':20.179, 'BE':9.01, 'FE':55.847, 'CO':58.933,'AG':107.868, 'CD':112.41, 'NI':58.693, 'ZN':65.39, 'BE':9.0122, 'IN':114.818, 'SI':28.085, 'SC':44.956, 'TI':47.867, 'V':50.941, 'MN':54.938, 'CU':63.546, 'GA':59.723, 'GE':72.64, 'SE':78.96, 'KR':83.8, 'ZR':91.224, 'NB':92.906, 'PD':106.42, 'SN':118.71, 'SB':121.76, 'XE':131.293, 'BA':137.327, 'LA':138.91, 'LI':6.941, 'HG':200.59, 'PB':207.2, 'BI':208.98, 'PO':209, 'TI':204.3833, 'AU':196.9665, 'IR':192.217, 'PT':195.078, 'RE':186.207, 'W':183.84, 'TA':180.948, 'YB':173.04, 'EU':151.964, 'ND':144.25, 'CE':140.116, 'TH':232.04, 'U':238.029, 'PU':244, 'FR':223, 'PA':231.04, 'HO':164.93, 'SM':150.36, 'PR':140.908, 'TE':127.6, 'TC':98, 'Y':88.906}
+element_radii = {'H': 0.25, 'HE': 0.31, 'LI': 1.45, 'BE': 1.05, 'B': 0.85, 'C': 0.70, 'N': 0.65, 'O': 0.60, 'F': 0.50, 'NE': 0.38, 'NA': 1.80, 'MG': 1.50, 'AL': 1.25, 'SI': 1.10, 'P': 1.00, 'S': 1.00, 'CL': 1.00, 'AR': 0.71, 'K': 2.20, 'CA': 1.80, 'SC': 1.60, 'TI': 1.40, 'V': 1.35, 'CR': 1.40, 'MN': 1.40, 'FE': 1.40, 'CO': 1.35, 'NI': 1.35, 'CU': 1.35, 'ZN': 1.35, 'GA': 1.30, 'GE': 1.25, 'AS': 1.15, 'SE': 1.15, 'BR': 1.15, 'KR': 1.03, 'RB': 2.35, 'SR': 2.00, 'Y': 1.80, 'ZR': 1.55, 'NB': 1.45, 'MO': 1.45, 'TC': 1.35, 'RU': 1.30, 'RH': 1.35, 'PD': 1.40, 'AG': 1.60, 'CD': 1.55, 'IN': 1.45, 'SN': 1.40, 'SB': 1.40, 'TE': 1.35, 'I': 1.35, 'XE': 1.30, 'CS': 2.45, 'BA': 2.15, 'LA': 2.00, 'CE': 2.00, 'PR': 2.00, 'ND': 2.00, 'PM': 2.00, 'SM': 2.00, 'EU': 2.00, 'GD': 2.00, 'TB': 2.00, 'DY': 2.00, 'HO': 2.00, 'ER': 2.00, 'TM': 2.00, 'YB': 2.00, 'LU': 1.80, 'HF': 1.55, 'TA': 1.45, 'W': 1.35, 'RE': 1.35, 'OS': 1.30, 'IR': 1.35, 'PT': 1.40, 'AU': 1.60, 'HG': 1.55, 'TL': 1.45, 'PB': 1.45, 'BI': 1.50, 'TH': 2.00, 'PA': 2.00, 'U': 2.00}
 atom_keys = atom_dict.keys()
+composite_sites = ['AS1', 'AS2', 'AS3', 'AS4', 'AS5', 'AS6', 'AS7', 'AS8', 'AS9', 'BS1', 'BS2', 'BS3', 'BS4', 'BS5', 'BS6', 'BS7', 'BS8', 'BS9']
+
 
 class atom:
     """
@@ -26,7 +38,7 @@ class atom:
 
     This class contains the essential parameters of an individual atom in a protein structural file, including the coordinates, element, atomic mass, parent residue, and line data.
     """
-    def __init__(self, element, x, y, z, data, residue = ''):
+    def __init__(self, element, x, y, z, data, residue = '', number = 0):
         
         self.element = element
         self.x = x
@@ -34,8 +46,16 @@ class atom:
         self.z = z
         self.residue = residue
         self.data = data
+        
         self.mass = atom_dict[self.element]
-             
+        self.radius = element_radii[self.element]
+            
+        self.number = number
+        
+    @cached_property
+    def center(self):
+        return [self.x, self.y, self.z]
+        
 class residue:
     """
     Residue class
@@ -43,12 +63,12 @@ class residue:
     This class contains the essential parameters of an individual residue in a protein structural file, including the child atoms, protein sidechain, residue index, and type of amino acid.
     """
     def __init__(self, amino_acid, index, chain):
-        
         self.amino_acid = amino_acid
         self.index = index
         self.atoms = []
         self.chain = chain
-            
+        self.structure = 'undefined'
+        
     @cached_property
     def center(self):
         """
@@ -63,13 +83,12 @@ class residue:
         """
         x, y, z, totmass = 0, 0, 0, 0
         for atom in self.atoms:
-            x += atom.x
-            y += atom.y 
-            z += atom.z
             totmass += atom.mass
-        x /= atom.mass
-        y /= atom.mass
-        z /= atom.mass
+        for atom in self.atoms:
+            modifier = atom.mass / totmass
+            x += atom.x * modifier
+            y += atom.y * modifier
+            z += atom.z * modifier
         return [x, y, z]
         
     def __getitem__(self, key):
@@ -125,19 +144,46 @@ class ligand:
         self.atoms = []
         
    
-    def download(self, directory = os.getcwd()):
+    def download(self, directory = os.getcwd(), convert_pdb = False):
         """
         Download Ligand
     
-        This method downloads the specific ligand structural file based on the ligand ID. 
+        This method downloads the specific ligand structural file based on the ligand ID. Scrapes atoms if file is downloaded outside of protein scope.
     
         Parameters
         ----------
         arg1 : str
             Directory structural file will be downloaded in. Defaults to current user directory.
         """
-        url = 'https://files.rcsb.org/ligands/download/' + self.ID + '_ideal.sdf'
-        urllib.request.urlretrieve(url, directory + '/' + self.ID + '.sdf')
+        try:
+            url = 'https://files.rcsb.org/ligands/download/' + self.ID + '_ideal.sdf'
+            urllib.request.urlretrieve(url, directory + '/' + self.ID + '.sdf')
+        except: 
+            try:
+                pcp.download('SDF', self.ID + '.sdf' , self.ID, 'smiles', overwrite = True) 
+            except:
+                try:
+                    pcp.download('SDF', self.ID + '.sdf' , self.ID, 'inchikey', overwrite = True) 
+                except:
+                    print('Ligand identifier not found! File downloaded incorrectly')
+    
+        if convert_pdb == True and len(self.atoms) == 0:
+            try:
+                os.system('obabel -isdf "' + self.ID + '.sdf" -O "' + self.ID + '.pdb" --gen3d')
+                with open(self.ID + '.pdb', 'r') as f:
+                    atoms = f.readlines()
+                os.remove(self.ID + '.pdb')
+                for line in atoms:
+                    if line[0:4] == 'ATOM' or line[0:6] == 'HETATM':
+                        element = line[76:80].strip()
+                        if element not in atom_keys:
+                            element = element[:1]
+                        atm = atom(element, float(line[30:38].strip()), float(line[38:47].strip()), float(line[47:56].strip()), data = line)
+                        self.atoms.append(atm)
+            except:
+                print('Openbabel package required to generate ligand atoms outside of protein class! Install from https://anaconda.org/conda-forge/openbabel or pip install openbabel')
+        return self.ID + '.sdf'
+        
         
     @cached_property
     def center(self):
@@ -161,6 +207,35 @@ class ligand:
         y /= totmass
         z /= totmass
         return [x, y, z]
+        
+    @cached_property
+    def radius(self):
+        """
+        Ligand Radius of Gyration
+    
+        This property returns the radius of gyration of the ligand, which is generated from all atom components. 
+    
+        Returns
+        -------
+        int
+            The radius of gyration of the ligand molecule
+        """
+        center = self.center
+        x, y, z, totmass = 0, 0, 0, 0
+        for atom in self.atoms:
+            x += pow(atom.x - center[0], 2) * atom.mass
+            y += pow(atom.y - center[1], 2) * atom.mass
+            z += pow(atom.z - center[2], 2) * atom.mass
+            totmass += atom.mass
+        x /= totmass
+        y /= totmass
+        z /= totmass
+        radius = pow(x + y + z, .5)
+        return radius
+        
+    @cached_property
+    def SMILE(self):
+        pass
         
 #Main protein class
 class Protein:
@@ -232,7 +307,7 @@ class Protein:
         except:
             print(traceback.format_exc())
             print('Protein file has not been downloaded yet! Download the protein with <protname>.download()')
-            )
+            
     def download(self, destination = os.getcwd()):
         """
         Download Protein
@@ -342,53 +417,154 @@ class Protein:
                     self.cif = True
                 except:
                     print(self.protein + ' not found in any libraries!')
+        self.structure_name = protname
         
         #Atomizes protein file
+        os.chdir(destination)
+        self.destination = destination
         if self.cif == False:
             with open(self.protein + '.pdb', 'r') as f:
                 data = f.readlines()
-            self.residue_list, curr_residue, curr_lig, currnum, curr_chain = [], -1, '', 0, ''
+            self.residue_list, curr_residue, curr_lig, currnum = [], -.5, '', 0
             if self.ID_type == 'PDB':
                 current_ligand_index, self.ligand_list = -1, []
+                
             for count, line in enumerate(data):
                 if line[0:6] == 'SEQRES':
                     chain = line[11:12]
-                    if curr_chain != chain:
-                        curr_chain = chain
-                        self.chains[chain] = int(line[13:17].strip())
+                    if chain not in list(self.chains.keys()):
+                        self.chains[chain] = 0
                         
                 elif line[0:4] == 'ATOM':
-                    resnum = int(line[23:27].strip())
+                    try:
+                        resnum = int(line[23:27].strip())
+                    except:
+                        resnum = int(line[22:27][:-1])
                     if resnum != curr_residue:
                         curr_residue = resnum
-                        chain, AA = line[21:22], line[17:20]
+                        chain, AA = line[21:22].strip(), line[17:20]
+                        if len(AA.strip()) < 3:
+                            try:
+                                AA = InverseFASTAdict[AA.strip()]
+                            except:
+                                pass
+                        
+                        self.chains[chain] += 1
                         res = residue(amino_acid = AA, index = resnum, chain = chain)
                         self.residue_list.append(res)
-                    element = line[77:79].strip()
+                    element = line[76:79].strip()
                     if element not in atom_keys:
-                        element = element[:1]
-                    atm = atom(element, float(line[30:38].strip()), float(line[38:47].strip()), float(line[47:56].strip()), residue = res.chain + str(resnum), data = line)
+                        e = element[:1]
+                        if e not in atom_keys:
+                            e = element[1:]
+                        element = e
+                    try:
+                        atm = atom(element, float(line[30:38].strip()), float(line[38:47].strip()), float(line[47:56].strip()), residue = res.chain + str(resnum), data = line, number = int(numconv.sub('', line[6:13])))
+                    except:
+                        try:
+                           atm = atom(element, float(line[30:37].strip()), float(line[38:46].strip()), float(line[47:53].strip()), residue = res.chain + str(resnum), data = line, number = int(numconv.sub('', line[6:13])))
+                        except:
+                            continue
+                            
                     res.atoms.append(atm)
             
-            #Generates ligands if PDB filetype and ligands in file
+            
             if self.ID_type == 'PDB':
+                #Generates ligands if PDB filetype and ligands in file
+                sheet, helix, chainkeys = [], [], list(self.chains.keys())
                 for count, line in enumerate(data):
                     if line[0:6] == 'HETATM':
                         ligands = line[17:20]
                         if ligands == 'HOH':
                             break
                         if ligands != curr_lig:
-                            lignum = int(line[22:27])
+                            try:
+                                lignum = int(line[22:27])
+                            except:
+                                lignum = int(line[22:26])
                             if lignum != currnum:
                                 currnum = lignum
                                 lig = ligand(ligands)
                                 self.ligand_list.append(lig)
                                 current_ligand_index += 1
-                            element = line[77:79].strip()
+                        element = line[76:80].strip()
                         if element not in atom_keys:
-                            element = element[:1]
-                        atm = atom(element, float(line[30:38].strip()), float(line[38:47].strip()), float(line[47:56].strip()), data = line)
-                        self.ligand_list[current_ligand_index].atoms.append(atm)
+                            e = element[:1]
+                            if e not in atom_keys:
+                                e = element[1:]
+                            element = e
+                        
+                        try:
+                            atm = atom(element, float(line[30:38].strip()), float(line[38:46].strip()), float(line[46:54].strip()), data = line, number = int(numconv.sub('', line[6:13])))
+                        except:
+                            continue
+                            
+                        try:
+                            self.ligand_list[current_ligand_index].atoms.append(atm)
+                        except:
+                            try:
+                                 self.ligand_list[current_ligand_index + 1].atoms.append(atm)
+                            except:
+                                 continue
+                            
+                    #Queries secondary structure  
+                    elif line[0:5] == 'SHEET':
+                        #line = [i for i in line.split(' ') if i != '']
+                        try:
+                            start = int(numconv.sub('', line[22:27]))
+                            end = int(numconv.sub('', line[34:39]))
+                            chain = line[19:20]
+                        except:  
+                            continue
+                        try:
+                            chainindex = chainkeys.index(chain)
+                        except:
+                            try:
+                                chainindex = chainkeys.index(line[2])
+                            except:
+                                continue
+                                
+                        for i in range(0, chainindex):
+                            start += self.chains[chainkeys[i]]
+                            end += self.chains[chainkeys[i]]
+
+                        for i in range(start, end + 1):
+                            sheet.append(i)
+                    elif line[0:5] == 'HELIX':
+                        #line = [i for i in line.split(' ') if i != '']
+                        try:
+                            start = int(numconv.sub('', line[22:27]))
+                            end = int(numconv.sub('', line[34:39]))
+                            chain = line[19:20]
+                        except:  
+                            continue
+                        try:
+                            chainindex = chainkeys.index(chain)
+                        except:
+                            try:
+                                chainindex = chainkeys.index(line[2])
+                            except:
+                                continue
+                        for i in range(0, chainindex):
+                            start += self.chains[chainkeys[i]]
+                            end += self.chains[chainkeys[i]]
+                        for i in range(start, end + 1):
+                            helix.append(i)
+                            
+                #Assigns secondary structure
+                for count, res in enumerate(self.residue_list):
+                    if count + 1 in sheet:
+                        res.structure = 'SHEET'
+                    elif count + 1 in helix:
+                        res.structure = 'HELIX'
+                    else:
+                        res.structure = 'UNSTRUCTURED'
+                    for resatom in res.atoms:
+                        resatom.parent_residue = res
+            else:
+                for resatom in res.atoms:
+                    resatom.parent_residue = res
+                        
         else:
             with open(self.protein + '.cif', 'r') as f:
                 data = f.readlines()
@@ -405,16 +581,22 @@ class Protein:
                             curr_num = chain_num
                             self.chains[letters[chain_num - 2]] = int(line[1])
                 if len(self.chains) > 0 and line[:1] == '#':
-                    chain_num = int(data[count - 1][:1])
-                    line = [i for i in data[count - 1].split(' ') if i != '']
-                    self.chains[letters[chain_num]] = int(line[1])
+                    try:
+                        chain_num = int(data[count - 1][:1])
+                        line = [i for i in data[count - 1].split(' ') if i != '']
+                        self.chains[letters[chain_num]] = int(line[1])
+                    except:
+                        continue
                     break
                     
             #Obtains residues from protein file
             self.residue_list, curr_residue = [], -1
             for count, line in enumerate(data):
                 if line[0:4] == 'ATOM':
-                    resnum = int(line[33:37].strip())
+                    try:
+                        resnum = int(line[33:37].strip())
+                    except:
+                        resnum = int(numconv.sub('', line[34:37].strip()))
                     if resnum != curr_residue:
                         curr_residue = resnum
                         chain, AA = line[28:29], line[24:27]
@@ -423,7 +605,13 @@ class Protein:
                     element = line[14:16].strip()
                     if element not in atom_keys:
                         element = element[:1]
-                    atm = atom(element, float(line[39:47].strip()), float(line[47:55].strip()), float(line[55:63].strip()), residue = res.chain + str(resnum), data = line)
+                    try:
+                        atm = atom(element, float(line[39:47].strip()), float(line[47:55].strip()), float(line[55:63].strip()), residue = res.chain + str(resnum), data = line)
+                    except:
+                        try:
+                            atm = atom(element, float(line[34:41].strip()), float(line[42:50].strip()), float(line[50:59].strip()), residue = res.chain + str(resnum), data = line)
+                        except:
+                            continue
                     res.atoms.append(atm)
                     
         #Strips binding sites if available
@@ -433,7 +621,7 @@ class Protein:
             for myligand in self.ligand_list:
                 ligands.append(myligand.ID)
             for count, line in enumerate(data):
-                if line[0:4] == 'SITE':
+                if line[0:4] == 'SITE' and 'HEM' not in line and line[11:14] not in composite_sites:
                     ID = line[11:14]
                     res = line.split(' ')
                     for number, site in enumerate(res):
@@ -445,14 +633,46 @@ class Protein:
                         firstRun = False
                     if line[11:14] != curr_site or data[count + 1][0:4] != 'SITE':
                         curr_site = line[11:14]
-                        self.ligand_list[counter].sites = sites
+                        try:
+                            self.ligand_list[counter].sites = sites
+                        except:
+                            continue
                         sites = []
                         counter += 1    
     
         #Generates FASTA sequence based on protein file
         self.FASTA = ''
         for id_residue in self.residue_list:
-            self.FASTA += FASTAdict[id_residue.amino_acid]
+            try:
+                self.FASTA += FASTAdict[id_residue.amino_acid]
+            except:
+                self.FASTA += id_residue.amino_acid.strip()
+
+    def pdbqt(self, destination = os.getcwd(), strip_ligands = False):
+        """
+        Convert protein structure to .PDBQT format
+        
+        This method generates a .pdbqt structural file of the protein for docking with AutoDock Vina (or AutoDock 4)
+        
+        Parameters
+        ----------
+        destination : str
+            Destination of the .pdbqt file. Defaults to the user's current directory.
+            
+        strip_ligands : bool
+            Will strip ligands from the generated .pdbqt file if present. Defaults to False.
+        """
+        try:
+            os.chdir(self.destination)
+        except:
+            self.download(destination)
+        try:
+            pdbqtconv = 'python2.7 ' + os.path.expanduser('~') + '/.conda/envs/AIBind/bin/prepare_receptor4.py -r ' + self.structure_name + '.pdb -o ' + self.structure_name + '.pdbqt'  
+            os.system(pdbqtconv)
+            with open(protein + '.pdbqt', 'r') as f:
+                    pass
+        except:
+            pass
     
     def to_csv(self, destination = os.getcwd()):
         """
@@ -463,7 +683,7 @@ class Protein:
         Parameters
         ----------
         destination : str
-            Destiation of the csv file. Defaults to the user's current directory
+            Destination of the csv file. Defaults to the user's current directory
         """
         atoms_x, atoms_y, atoms_z, atoms_element, atoms_residue, residue_index, residue_chain = [], [], [], [], [], [], []
         for count, residue in enumerate(self.residue_list):
@@ -494,13 +714,13 @@ class Protein:
             x, y, z, totmass = 0, 0, 0, 0
             for res in self.residue_list:
                 for atom in res.atoms:
-                    x += atom.x
-                    y += atom.y
-                    z += atom.z
                     totmass += atom.mass
-            x /= totmass
-            y /= totmass
-            z /= totmass
+            for res in self.residue_list:
+                for atom in res.atoms:
+                    modifier = atom.mass / totmass
+                    x += atom.x * modifier
+                    y += atom.y * modifier
+                    z += atom.z * modifier
             return [x, y, z]
         except:
             print('Protein not downloaded yet or downloaded incorrectly!')
@@ -552,18 +772,16 @@ class Protein:
         try:
             try:
                 index = int(re.sub('[^0-9]', '', residue_index))
-                residue = self.residue_list[index]
-                if residue.index != index:
-                    diff = residue.index - index
-                    residue = self.residue_list[index - diff]
+                starting_index = index + 1
+                chain = re.sub('[0-9]', '', residue_index).strip('_')
+                residues = [res for res in self.residue_list if res.chain == chain]
+                residue = [res for res in residues if res.index == index][0]
             except:
                 residue = self.residue_list[residue_index]
-    
-            residue_items = {'chain':residue.chain, 'AA':residue.amino_acid, 'index':residue.index, 'atoms':residue.atoms}
-            res = pd.Series(residue_items, index = ['chain', 'AA', 'index', 'atoms'])
-            return res
+
+            return residue
         except:
-            return 'Index larger than number of residues!'
+            return
            
     @lru_cache
     def atoms(self, atom_index):
@@ -585,11 +803,8 @@ class Protein:
         ac = 0
         for res in self.residue_list:
             for atom in res.atoms:
-                if ac == atom_index:
-                    atom_items = {'element':atom.element, 'x':atom.x, 'y':atom.y, 'z':atom.z, 'residue':atom.residue, 'data':atom.data}
-                    atm = pd.Series(atom_items, index = ['element', 'x', 'y', 'z', 'residue', 'data'])
-                    return atm
-                ac += 1
+                if atom.number == atom_index:
+                    return atom
         return 'Index is larger than total number of atoms!'
     
     def concat(self, start, stop, destination = os.getcwd()):
@@ -912,22 +1127,22 @@ class Protein:
         for ligand in self.ligand_list:
             if ligand.ID not in ligs:
                 ligs.append(ligand.ID)
-            ligand = ligs[1]
+            ligand = ligs[0]
             cofactors = ligs[1:]
         ligands = pd.DataFrame.from_dict({'Primary Ligand':ligand, 'Cofactors':cofactors})
         return ligands
     
     @cached_property   
-    def interactions(self):
+    def ligand_interactions(self):
         """
-        Protein Interactions
+        Protein-Ligand Interactions
     
         This property allows the user to query the Bioinformatics databases STITCH, BindingDB, and ChEMBL for relevant protein-ligand and protein-protein interactions. BindingDB interactions are contained in a dataframe containing the Kd constant in nanoMolar. ChEMBL IDs are returned along with the IC50 or DC50 values in nanoMolar. STITCH data represents a dictionary-embedded list of all proteins and ligands with network-based interactions. If valid data cannot be pulled from any site, their output datatypes will not be included in output.
     
         Returns
         -------
-        list
-            A list containing two dataframes for BindingDB and ChEMBL protein-ligand intearction data, as well as a dictionary containing all STITCH interactors for the given protein ID with a high confidence of interaction.
+        dict
+            A dictionary containing two dataframes for BindingDB and ChEMBL protein-ligand intearction data, as well as a dictionary containing all STITCH interactors for the given protein ID with a high confidence of interaction.
         """
         try:
             #Queries bindingDB for ligand interactions
@@ -975,6 +1190,7 @@ class Protein:
                             value *= 1000
                         elif act['units'] == 'pM':
                             value /= 1000
+               
                     try:
                         ligands.append(act['canonical_smiles'])
                         activities.append(value)
@@ -1001,19 +1217,43 @@ class Protein:
         except:
             print(traceback.format_exc())
             return 'N/A'
+            
+    @cached_property
+    def protein_interactions(self):
+        """
+        Protein-Protein Interactions
+    
+        This property allows the user to query the Bioinformatics databases stringDB for PPI interactions for the protein.
+    
+        Returns
+        -------
+        dict
+            A dictionary containing all PPI partners from stringDB as keys, and a list with the format [max_interaction_score, mean_interaction_score] as values.
+        """
+        gene = self.Gene
+        string_ids = stringdb.get_string_ids(gene)
+        interactions = stringdb.get_interaction_partners(string_ids.queryItem)
+        sets = list(set(interactions['preferredName_A']))
+        PPI = {}
+        for gene in sets:
+            PPI_gene = list(interactions[interactions['preferredName_A'] == gene]['score'])
+            score = max(PPI_gene)
+            mean_score = sum(PPI_gene)/len(PPI_gene)
+            PPI[gene] = [score, mean_score]
+        return PPI
+        
+        
     '''
     TODO
-    - Add secondary structure prediction to residues (use s4pred?)
     - Add more ID conversions
     '''
+
 '''
 #For unit testing    
 if __name__ == '__main__':
-    p = Protein('1HK4')
+    p = Protein('7YS8')
     p.download()
-    print(p.ligands)
-    #new = Protein(p.Uniprot)
-    #new.download()
-    #print(new.interactions)
-    #print(protein.interactions)
+    res = '44_B'
+    print(p.residues(res).amino_acid)
 '''
+    
