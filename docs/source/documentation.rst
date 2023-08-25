@@ -158,7 +158,14 @@ The ligand file can be downloaded by the ``.download('/path/to/file')`` method, 
    for ligand in protein.ligand_list:
        print(ligand.ID)
        print(ligand.center)
-       
+
+Ligand objects can also be created by specifying the path of the existing file when instantializing the ligand. Acceptable file formats are .pdb, .sdf, or .pdbqt. 
+
+.. code-block:: python
+
+      ligand = protein.ligand(file_path = '/path/to/file')
+      center = ligand.center
+
 Ligand files can also be instantiated separate of the protein. Simply generate the ligand with the ligand ID, and use the .download method with the path to download (defaults to the current user directory). InChiKeys, PDB IDs, and SMILEs sequences are accepted.
 
 .. code-block:: python
