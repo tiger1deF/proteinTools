@@ -78,11 +78,13 @@ A list of every atom in the protein and their properties can be created with the
 Every line of the file is present in the .data method.
 
 .. code-block:: python
+
    protein_lines = myprot.data
 
 A recreation of the protein file stripped of ligand molecules can be created using the strip_ligands method, where the destination is the location of the file, defaulting to the current user directory.
 
 .. code-block:: python
+
    myprot.strip_ligands()
 
 the .ligands property returns a two-row dataframe, with the first row containing the primary ligand, all unique cofactors, and all ions present in the protein structure, where the second row contains the corrosponding ligand objects populated directly from the file for each category. 
