@@ -188,4 +188,4 @@ Ligand files can also be instantiated separate of the protein. Simply generate t
     
 .. warning:: 
 
-   The above functionality depends on the chemical structure package Openbabel, which can be installed via ```pip install openbabel```
+   The above functionality depends on the chemical structure package Openbabel, which can be installed via ``pip install openbabel``
