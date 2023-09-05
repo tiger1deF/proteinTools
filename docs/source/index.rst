@@ -16,7 +16,8 @@ Start by creating a protein class with the desired ChEMBL, PDB, Uniprot, or HGNC
         protein.download('/structural/protein/path')
 
         print(protein.Uniprot)
-        print(protein.residues('A44').chain)
+        print(protein.residues(44).chain)
+        print(protein.residues('A_44').atoms[0].element)
         print(protein[1:3])
         print(protein.atoms(1000).center)
         print(protein.atoms(1000).line)
@@ -24,7 +25,8 @@ Start by creating a protein class with the desired ChEMBL, PDB, Uniprot, or HGNC
 Output: ::
 
         P07268
-        A
+        A 
+        C
         [<__main__.residue object at 0x2b937f95e220>, <__main__...
         [42.103, 23.252, 48.275]
         line       ATOM   1001  OD1 ASP A 129      42.103  23.252...
