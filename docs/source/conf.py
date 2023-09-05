@@ -6,8 +6,8 @@ project = 'proteinTools'
 copyright = '2023, Christian de Frondeville'
 author = 'Christian de Frondeville'
 
-release = '1.7'
-version = '1.7.1'
+release = '2.1.1'
+version = '2.1.0'
 
 # -- General configuration
 
