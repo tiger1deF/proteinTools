@@ -191,7 +191,7 @@ Ligand files can also be instantiated separate of the protein. Simply generate t
 
 Autodock Vina Integration
 --------------
-The protein file can be downloaded in .pdbqt format (a specialized Vina protein file format for docking) using the .pdbqt('/path/to/directory') method, where the path defaults to the current user directory.
+The protein file can be converted to .pdbqt format (a specialized Vina protein file format for docking) using the .pdbqt('/path/to/directory') method, where the path represents the location of the downloaded pdb file, and defaults to the current user directory.
 
 .. code-block:: python
 
