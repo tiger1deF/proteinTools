@@ -81,11 +81,6 @@ Every line of the file is present in the .data method.
 
    protein_lines = myprot.data
 
-A recreation of the protein file stripped of ligand molecules can be created using the strip_ligands method, where the destination is the location of the file, defaulting to the current user directory.
-
-.. code-block:: python
-
-   myprot.strip_ligands()
 
 the .ligands property returns a two-row dataframe, with the first row containing the primary ligand, all unique cofactors, and all ions present in the protein structure, where the second row contains the corrosponding ligand objects populated directly from the file for each category. 
 
@@ -189,3 +184,23 @@ Ligand files can also be instantiated separate of the protein. Simply generate t
 .. warning:: 
 
    The above functionality depends on the chemical structure package Openbabel, which can be installed via ``pip install openbabel``
+
+Autodock Vina Integration
+--------------
+The protein file can be downloaded in .pdbqt format (a specialized Vina protein file format for docking) using the .pdbqt('/path/to/directory') method, where the path defaults to the current user directory.
+
+.. code-block:: python
+
+      protein.pdbqt()
+
+A recreation of the protein file stripped of ligand molecules can be created using the .strip_ligands method, where the destination is the location of the file, defaulting to the current user directory.
+
+.. code-block:: python
+
+   myprot.strip_ligands()
+
+A recreation of the protein file stripped of only the primary ligand molecules (not cofactors and ions) can be created using the .strip_primary method, where the destination is the location of the file, defaulting to the current user directory.
+
+.. code-block:: python
+
+   myprot.strip_primary()
