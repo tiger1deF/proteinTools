@@ -26,14 +26,15 @@ The protein file can than be downloaded to a directory (default the user's curre
    
 Protein Properties
 ------------------
-The protein's ChEMBL ID, Uniprot ID, PDB ID, and Gene ID can all be accessed with properties of the same name. For PDB IDs, proteinTools returns a **dataframe** containing the PDB ID(s), minimum resolution of the PDB file in Angstroms, and the total number of unique ligands present in the file. The protein file does not need to be downloaded to access these values.
+The protein's ChEMBL ID, Ensembl ID, Uniprot ID, PDB ID, and Gene ID can all be accessed with properties of the same name. For PDB IDs, proteinTools returns a **dataframe** containing the PDB ID(s), minimum resolution of the PDB file in Angstroms, and the total number of unique ligands present in the file. The protein file does not need to be downloaded to access these values.
 
 .. code-block:: python
    
-   myprot.Uniprot
-   myprot.Gene
-   myprot.ChEMBL
-   myprot.PDB
+   Uniprot = myprot.Uniprot
+   Gene = myprot.Gene
+   ChEMBL = myprot.ChEMBL
+   PDB = myprot.PDB
+   Ensembl = myprot.Ensembl
 
 Protein residues can be queried by indexing as one would a list.
 
