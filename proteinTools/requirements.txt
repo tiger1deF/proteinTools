@@ -2,3 +2,4 @@ pandas==2.1.0
 mygene==3.2.2
 pubchempy==1.0.4
 stringdb==0.1.5
+furo==2023.9.10
